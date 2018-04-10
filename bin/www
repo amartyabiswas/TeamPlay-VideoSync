@@ -5,7 +5,7 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('teamplay:server');
+var debug = require('debug')('groupplay:server');
 var http = require('http');
 
 /**
