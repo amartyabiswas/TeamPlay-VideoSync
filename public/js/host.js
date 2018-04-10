@@ -1,5 +1,3 @@
-//-----------------------------------------------------------------------------
-// Host stuff
 var host = false
 
 // Sets the host for the room
@@ -125,5 +123,3 @@ socket.on('compareHost', function(data) {
             console.log("Error invalid player id")
     }
 });
-
-//-----------------------------------------------------------------------------
