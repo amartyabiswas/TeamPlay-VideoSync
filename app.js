@@ -1,7 +1,6 @@
 let express = require('express');
 let path= require('path');
 let app = express();
-let port = process.env.PORT|| 5000;
 let bodyParser=require('body-parser');
 let cookieParser=require('cookie-parser');
 let server = require('http').createServer(app);
@@ -9,6 +8,7 @@ let io = require('socket.io').listen(server);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
+app.set('port', process.env.PORT || 5000);
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.json());
@@ -25,8 +25,8 @@ rooms = [];
 userrooms = {};
 
 
-server.listen(port, function () {
-   console.log('Magic happens at port '+ port);
+server.listen(app.get('port'), function(){
+    console.log('Express server listening on port ' + app.get('port'));
 });
 
 app.get('/:room', function(req, res) {
