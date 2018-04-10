@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>TeamPlay</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/animate.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+  <link href="css/small-business.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+
+  <link rel="icon" type="image/png" sizes="16x16" href="img/logo.png">
+
+  <style>
+    .py-5{
+        background: linear-gradient(to left, #000000,#53346D);
+    }
+
+      .navbar{
+          background: linear-gradient(to right, #000000,#53346D);
+      }
+  </style>
+</head>
+
+<body class="bg-light" id="Home">
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand js-scroll-trigger" href="#Home"><img src="img/logo.png" alt="TeamPlay logo" height="40" width="40"> TeamPlay</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#about">SE Project</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <div id="userFormArea" class="row">
+      <div class="col-md-8">
+        <br>
+        <h2>Welcome to TeamPlay</h2>
+        <p class="lead">The seamless web-app for playing synchronous videos from Youtube and Daily-Motion.</p>
+        <hr style="height:20pt; visibility:hidden" />
+
+        <h2> Join a Room! </h2>
+        <form id="userForm">
+          <div class="form-group">
+            <p style="color:red; margin-bottom: 0px" id="missinginfo"></p>
+            <label>Enter Name</label>
+                <input class="form-control" id="username" />
+            <br>
+            <label>Enter Room ID (Default 1)</label>
+                <input class="form-control" id="roomnum" />
+            <br>
+            <input type="submit" class="btn btn-primary" value="Enter" />
+            <hr style="height:65pt; visibility:hidden;" />
+          </div>
+        </form>
+      </div>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<div class="vl"></div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div style="margin-top: 2em; display: inline" class="col-md-3" align="center">
+            <div class="well">
+                <h4>Online Rooms</h4><br>
+                <ul class="list-group" id="available"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="roomArea">
+      <!-- Heading Row -->
+      <div class="row my-4">
+        <div class="col-lg-8">
+
+
+          <div class="dropdown">
+            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-video"></i> Player
+              </button>
+            <div class="form-control dropdown-menu scrollable-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" onclick="changePlayer(roomnum, 0)"><i class="fab fa-youtube"></i> YouTube</a>
+              <a class="dropdown-item" onclick="changePlayer(roomnum, 1)"><img width="14px" height="14px" src="img/dailymotion-logo.svg" alt="Daily Motion Logo"> Daily Motion</a>
+            </div>
+          </div>
+
+          <br><b>Note: </b><p id="invite" style="display: inline"><!--Invitation area--></p><br><br>
+          <h3><span id="hostlabel" class="label label-default"><i class="fas fa-user"></i> <!--Current Host: Kyle--> </span></h3>
+
+          <!----------------------------------- PLAYER AREA ----------------------------------->
+
+          <div id='playerArea'>
+            <iframe class="video" id="player" allowfullscreen="0" rel="0" width="640" height="360" src="https://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1" frameborder="1" style="border: solid 4px #37474F"></iframe>
+          </div>
+          <div id='dailyArea'>
+            <iframe class="video" id="player-daily" frameborder="0" width="640" height="360" allowfullscreen allow="autoplay"></iframe>
+          </div>
+
+          <!----------------------------------- PLAYER AREA ----------------------------------->
+          <div>
+            <button onclick="playVideo(roomnum)" style="margin-top:.5rem" class="btn btn-primary"><i class="fa fa-play"></i> Play / <i class="fa fa-pause"></i> Pause</button>
+
+            <button id="syncbutton" onclick="syncVideo(roomnum);syncAlert()" style="margin-top:.5rem" class="btn btn-primary"><i class="fa fa-sync"></i> Sync</button>
+
+            <button id="hostbutton" onclick="changeHost(roomnum)" style="margin-top:.5rem" class="btn btn-primary"><i class="fas fa-users"></i> Make me the host!</button>
+          </div>
+
+          <br/>
+          <div>
+            <input type="Video" style="max-width: 200px; margin-right: 0rem" class="form-control" id="inputVideoId" placeholder="Video ID">
+            <button onclick="changeVideo(roomnum)" style="margin-top:.5rem" class="btn btn-danger"><i class="fas fa-exchange-alt"></i> Change Video</button>
+            <button onclick="prevVideo(roomnum)" style="margin-top:.5rem" class="btn btn-danger"><i class="fas fa-step-backward"></i> Previous Video</button>
+            <br/>
+          </div>
+        </div>
+
+        <!-- /.col-lg-8 -->
+        <div class="col-lg-4">
+          <div style="margin-top: 2em" class="col-md-5">
+            <div style="padding-right: 20em;" class="well">
+              <h4>Online_Users</h4>
+              <ul class="list-group" id="users"></ul>
+            </div>
+          </div>
+        </div>
+        <!-- /.col-md-4 -->
+      </div>
+
+      <!-- /.row -->
+
+        <br>
+        <hr>
+        <br>
+      <div id="messageArea" class="row">
+        <br/>
+        <div class="col-md-7">
+            <h2>Chat Box</h2>
+            <div class="chat" id="chat" style="display: block"></div>
+
+              <!-- Message Form (Enter Message) -->
+            <br>
+              <form id="messageForm">
+                <div class="form-group">
+                  <textarea class="form-control" id="message" style="border: solid; border-color: #C82333" placeholder="Your messages go here"></textarea>
+                  <br/>
+                  <input type="submit" class="btn btn-primary" value="Send Message" />
+                </div>
+              </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.container -->
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; Amartya Biswas 2018</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+
+  <script>
+    var socket = io.connect();
+    var roomnum = 1;
+
+    // Chat stuff
+    $(function() {
+      //var socket = io.connect();
+      var $messageForm = $('#messageForm');
+      var $message = $('#message');
+      var $chat = $('#chat');
+      var $roomArea = $('#roomArea');
+      var $userFormArea = $('#userFormArea');
+      var $userForm = $('#userForm');
+      var $users = $('#users');
+      var $username = $('#username');
+      var $roomnum = $('#roomnum');
+      var $online = $('#available');
+
+        socket.on('available rooms', function(data){
+            var html = '';
+            console.log(data.userrooms);
+            for(var i in data.userrooms){
+                html += '<li class="list-group-item">' + "Room Number: "+data.userrooms[i] + '</li>';
+                console.log(data.userrooms[i]);
+            }
+            $online.html(html);
+        });
+
+      $messageForm.submit(function(e) {
+        e.preventDefault();
+        // console.log("Submitted");
+        socket.emit('send message', $message.val());
+        $message.val('');
+      });
+
+      socket.on('new message', function(data) {
+        $chat.append('<div class="well"><strong>' + data.user + '</strong>: ' + data.msg + '</div>');
+      });
+
+      // Submit user form
+      $userForm.submit(function(e) {
+        e.preventDefault();
+        // console.log("Submitted");
+        // New User
+        if ($username.val() == "") {
+          console.log("ENTER A NAME");
+          var noname = document.getElementById('missinginfo');
+          noname.innerHTML = "Please enter your name!"
+        } else {
+          socket.emit('new user', $username.val(), function(data) {
+            if (data) {
+              $userFormArea.hide();
+              $roomArea.show();
+
+              // This sets the room number on the client
+              if ($roomnum.val() !== "") {
+                roomnum = $roomnum.val()
+              }
+
+              // Sets the invite link (roomnum)
+              document.getElementById('invite').innerHTML = "Invite your friend using the link: vynchronize.herokuapp.com/" + roomnum
+            }
+          });
+          // Join room
+          socket.emit('new room', $roomnum.val(), function(data) {
+            // This should only call back if the client is the host
+            if (data) {
+              console.log("Host is syncing the new socket!");
+              syncVideo(roomnum)
+            }
+          });
+
+          $username.val('');
+        }
+      });
+
+      socket.on('get users', function(data) {
+        var html = '';
+        for (i = 0; i < data.length; i++) {
+          html += '<li style="padding-right: 10em;" class="list-group-item">' + data[i] + '</li>';
+        }
+        $users.html(html);
+      });
+    });
+
+    // set id
+    socket.on('set id', function(data) {
+      if (data.id !== "") {
+        document.getElementById('roomnum').value = data.id;
+        document.getElementById('roomnum').readOnly = true;
+        console.log("You are joining room: " + data.id);
+      }
+      // Reset url for next person
+      // Workaround
+      socket.emit('reset url')
+    });
+  </script>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="js/dependencies/jquery.min.js"></script>
+  <script src="js/dependencies/bootstrap.bundle.min.js"></script>
+  <script src="js/dependencies/scrolling-nav.js"></script>
+  <script src="js/dependencies/bootstrap-notify.min.js"></script>
+  <!-- Plugin JavaScript -->
+  <script src="js/dependencies/jquery.easing.min.js"></script>
+
+
+  <!-- My JS files -->
+  <script src="js/sync.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/host.js"></script>
+  <script src="js/events.js"></script>
+
+  <!-- Youtube -->
+  <script src="js/yt.js"></script>
+  <!-- Daily Motion -->
+  <script src="https://api.dmcdn.net/all.js"></script>
+  <script src="js/dm.js"></script>
+
+</body>
+
+</html>
