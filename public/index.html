@@ -26,6 +26,10 @@
       .navbar{
           background: linear-gradient(to right, #000000,#53346D);
       }
+
+    .online{
+      margin-right: -32px;
+    }
   </style>
 </head>
 
@@ -52,7 +56,7 @@
   <div class="container">
 
     <div id="userFormArea" class="row">
-      <div class="col-md-8">
+      <div class="col-sm-8">
         <br>
         <h2>Welcome to TeamPlay</h2>
         <p class="lead">The seamless web-app for playing synchronous videos from Youtube and Daily-Motion.</p>
@@ -74,7 +78,7 @@
         </form>
       </div>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<div class="vl"></div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <div style="margin-top: 2em; display: inline" class="col-md-3" align="center">
+        <div style="margin-top: 2em; display: inline" class="online col-sm-3" align="center">
             <div class="well">
                 <h4>Online Rooms</h4><br>
                 <ul class="list-group" id="available"></ul>
@@ -128,19 +132,15 @@
           </div>
         </div>
 
-        <!-- /.col-lg-8 -->
         <div class="col-lg-4">
-          <div style="margin-top: 2em" class="col-md-5">
+          <div style="margin-top: 2em" class="col-md-5" align="center">
             <div style="padding-right: 20em;" class="well">
               <h4>Online_Users</h4>
               <ul class="list-group" id="users"></ul>
             </div>
           </div>
         </div>
-        <!-- /.col-md-4 -->
       </div>
-
-      <!-- /.row -->
 
         <br>
         <hr>
@@ -151,7 +151,6 @@
             <h2>Chat Box</h2>
             <div class="chat" id="chat" style="display: block"></div>
 
-              <!-- Message Form (Enter Message) -->
             <br>
               <form id="messageForm">
                 <div class="form-group">
@@ -164,14 +163,11 @@
       </div>
     </div>
   </div>
-  <!-- /.container -->
 
-  <!-- Footer -->
   <footer class="py-5 bg-dark">
     <div class="container">
       <p class="m-0 text-center text-white">Copyright &copy; Amartya Biswas 2018</p>
     </div>
-    <!-- /.container -->
   </footer>
 
   <script>
@@ -196,8 +192,16 @@
             var html = '';
             console.log(data.userrooms);
             for(var i in data.userrooms){
-                html += '<li class="list-group-item">' + "Room Number: "+data.userrooms[i] + '</li>';
-                console.log(data.userrooms[i]);
+                var j;
+                for(j in data.userrooms) {
+                    if (data.userrooms[j] === data.userrooms[i]) {
+                       break;
+                    }
+                }
+
+                if(i===j){
+                    html += '<li class="list-group-item">' + "Room No: "+data.userrooms[i] + '</li>';
+                }
             }
             $online.html(html);
         });
