@@ -105,8 +105,6 @@
           <br><b>Note: </b><p id="invite" style="display: inline"><!--Invitation area--></p><br><br>
           <h3><span id="hostlabel" class="label label-default"><i class="fas fa-user"></i> <!--Current Host: Kyle--> </span></h3>
 
-          <!----------------------------------- PLAYER AREA ----------------------------------->
-
           <div id='playerArea'>
             <iframe class="video" id="player" allowfullscreen="0" rel="0" width="640" height="360" src="https://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1" frameborder="1" style="border: solid 4px #37474F"></iframe>
           </div>
@@ -114,7 +112,7 @@
             <iframe class="video" id="player-daily" frameborder="0" width="640" height="360" allowfullscreen allow="autoplay"></iframe>
           </div>
 
-          <!----------------------------------- PLAYER AREA ----------------------------------->
+          
           <div>
             <button onclick="playVideo(roomnum)" style="margin-top:.5rem" class="btn btn-primary"><i class="fa fa-play"></i> Play / <i class="fa fa-pause"></i> Pause</button>
 
@@ -238,7 +236,7 @@
               }
 
               // Sets the invite link (roomnum)
-              document.getElementById('invite').innerHTML = "Invite your friend using the link: https://teamplays.herokuapp.com/" + roomnum
+              document.getElementById('invite').innerHTML = "Invite your friend using the link: https://teamplayz.herokuapp.com/" + roomnum
             }
           });
           // Join room
